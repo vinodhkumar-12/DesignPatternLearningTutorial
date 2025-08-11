@@ -4,81 +4,68 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Rectangle rect = new Rectangle(1,1);
-        rect.AreaofRectangle();
+        ElectronicGoods tv = new Television();
+        tv.State  = new OnState();
 
-        Triangle t = new Triangle(2,3);
-        t.AreaofTriangle();
+        tv.MoveToCurrentState();
 
-        IRectangle adapter = new TriangleAdapter(t);
+        tv.State = new OffState();
 
-        Program program = new Program();
-        program.GetArea(adapter);
-    }
-
-    public void GetArea(IRectangle t)
-    {
-        t.AreaofRectangle();
+        tv.MoveToCurrentState();
     }
 }
 
 
-public interface IRectangle
-{
-    public int AreaofRectangle();
-}
 
-public interface ITriangle
+public interface IState
 {
-    public int AreaofTriangle();
+    public void MoveState();
 }
 
 
-public class Rectangle : IRectangle
+public class OnState : IState
 {
-    public int length { get; set; }
-    public int breadth { get; set; }
-
-    public Rectangle(int length, int breadth)
+    public void MoveState()
     {
-        this.length = length;
-        this.breadth = breadth;
-    }
-    public int AreaofRectangle()
-    {
-        Console.WriteLine("Area of Rectangle is {0}", length * breadth);
-        return length * breadth;
+        Console.WriteLine("On State");
     }
 }
 
-public class Triangle : ITriangle
+public class OffState : IState
 {
-    public int breadth { get; set; }
-    public int height { get; set; }
-
-    public Triangle(int breadth, int height)
+    public void MoveState()
     {
-        this.breadth =breadth;
-        this.height = height;
-    }
-    public int AreaofTriangle()
-    {
-        Console.WriteLine("Area of Triangle is {0}", (int)(0.5 * breadth * height));
-        return (int)(0.5 * breadth * height);
+        Console.WriteLine("Off State");
     }
 }
 
-public class TriangleAdapter : IRectangle
-{
 
-    Triangle _t;
-    public TriangleAdapter(Triangle t)
+public abstract class ElectronicGoods
+{
+    protected IState state;
+
+    public IState State
     {
-        _t = t;
+        get { return state; }
+        set { state = value; }
     }
 
-    public int AreaofRectangle()
+    public abstract void MoveToCurrentState();
+}
+
+public class Television : ElectronicGoods
+{
+    public override void MoveToCurrentState()
     {
-        return _t.AreaofTriangle();
+        state.MoveState();
+    }
+}
+
+
+public class AC : ElectronicGoods
+{
+    public override void MoveToCurrentState()
+    {
+        state.MoveState();
     }
 }
