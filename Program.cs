@@ -3,40 +3,90 @@
 
     public static void Main(string[] args)
     {
-        SingleTon singleTon = SingleTon.Instance;
+        ObserverType1 observerType1 = new ObserverType1("Vinodh");
+        ObserverType2 observerType2 = new ObserverType2("kumar");
 
+        Subject sub = new Subject();
+
+        sub.Register(observerType1);
+        sub.Register(observerType2);
+
+        sub.Flag = 1;
+
+        sub.UnRegister(observerType2);
+
+        sub.Flag = 2;
     }
-
 }
 
 
-public class SingleTon
+
+public interface IObserver
 {
-    private static SingleTon _instance = null;
-    private static readonly object _instanceLock = new object();
+    void Update(int i);
+}
 
-    private static int counter = 0;
-
-    public static SingleTon Instance
+public class ObserverType1 : IObserver
+{
+    public string name;
+    public ObserverType1(string name)
     {
-        get
-        {
-            if (_instance == null)
-            {
-                lock (_instanceLock)
-                {
-                    if (_instance == null)
-                    {
-                        _instance = new SingleTon();
-                    }
-                }
-            }
-            return _instance;
-        }
+        this.name = name;
     }
-    private SingleTon()
+
+    public void Update(int i)
     {
-        counter++;
-        Console.WriteLine("Instance Counter is {0}", counter++);
+        Console.WriteLine("{0} of Observer Type 1 with value {1} is alerted", name, i);
+    }
+}
+
+
+public class ObserverType2 : IObserver
+{
+    public string name;
+    public ObserverType2(string name)
+    {
+        this.name = name;
+    }
+
+    public void Update(int i)
+    {
+        Console.WriteLine("{0} of Observer Type 2 with value {1} is notified", name, i);
+    }
+}
+
+
+public interface ISubject
+{
+    void Register(IObserver observer);
+    void UnRegister(IObserver observer);
+    void NotifyRegisteredUser();
+}
+public class Subject : ISubject
+{
+
+    public int flag;
+
+    public int Flag { set { flag = value; NotifyRegisteredUser(); } }
+
+
+    List<IObserver> observerlist = new List<IObserver>();
+
+    public void Register(IObserver observer)
+    {
+        observerlist.Add(observer);
+    }
+
+    public void UnRegister(IObserver observer)
+    {
+        observerlist.Remove(observer);
+    }
+
+    public void NotifyRegisteredUser()
+    {
+        foreach (IObserver observer in observerlist)
+        {
+            observer.Update(flag);
+        }
     }
 }
