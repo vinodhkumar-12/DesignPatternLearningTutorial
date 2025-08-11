@@ -1,92 +1,53 @@
 ﻿public class Program
 {
-
     public static void Main(string[] args)
     {
-        ObserverType1 observerType1 = new ObserverType1("Vinodh");
-        ObserverType2 observerType2 = new ObserverType2("kumar");
 
-        Subject sub = new Subject();
+        Context context = new Context();
 
-        sub.Register(observerType1);
-        sub.Register(observerType2);
+        context.SetChoice(new Choice1());
 
-        sub.Flag = 1;
+        context.ShowChoice();
+    }
+}
 
-        sub.UnRegister(observerType2);
 
-        sub.Flag = 2;
+public class Context
+{
+    IChoice _choice;
+    public void SetChoice(IChoice choice)
+    {
+        _choice = choice;
+    }
+
+    public void ShowChoice()
+    {
+        _choice.Mychoice();
+    }
+
+}
+
+public interface IChoice
+{
+
+    public void Mychoice();
+
+}
+
+public class Choice1 : IChoice
+{
+    public void Mychoice()
+    {
+        Console.WriteLine("I Want to have snacks");
     }
 }
 
 
 
-public interface IObserver
+public class Choice2 : IChoice
 {
-    void Update(int i);
-}
-
-public class ObserverType1 : IObserver
-{
-    public string name;
-    public ObserverType1(string name)
+    public void Mychoice()
     {
-        this.name = name;
-    }
-
-    public void Update(int i)
-    {
-        Console.WriteLine("{0} of Observer Type 1 with value {1} is alerted", name, i);
-    }
-}
-
-
-public class ObserverType2 : IObserver
-{
-    public string name;
-    public ObserverType2(string name)
-    {
-        this.name = name;
-    }
-
-    public void Update(int i)
-    {
-        Console.WriteLine("{0} of Observer Type 2 with value {1} is notified", name, i);
-    }
-}
-
-
-public interface ISubject
-{
-    void Register(IObserver observer);
-    void UnRegister(IObserver observer);
-    void NotifyRegisteredUser();
-}
-public class Subject : ISubject
-{
-
-    public int flag;
-
-    public int Flag { set { flag = value; NotifyRegisteredUser(); } }
-
-
-    List<IObserver> observerlist = new List<IObserver>();
-
-    public void Register(IObserver observer)
-    {
-        observerlist.Add(observer);
-    }
-
-    public void UnRegister(IObserver observer)
-    {
-        observerlist.Remove(observer);
-    }
-
-    public void NotifyRegisteredUser()
-    {
-        foreach (IObserver observer in observerlist)
-        {
-            observer.Update(flag);
-        }
+        Console.WriteLine("I Want to have juice");
     }
 }
