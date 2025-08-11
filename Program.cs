@@ -1,53 +1,84 @@
-﻿public class Program
+﻿using System.Security.Cryptography.X509Certificates;
+
+public class Program
 {
     public static void Main(string[] args)
     {
+        Rectangle rect = new Rectangle(1,1);
+        rect.AreaofRectangle();
 
-        Context context = new Context();
+        Triangle t = new Triangle(2,3);
+        t.AreaofTriangle();
 
-        context.SetChoice(new Choice1());
+        IRectangle adapter = new TriangleAdapter(t);
 
-        context.ShowChoice();
+        Program program = new Program();
+        program.GetArea(adapter);
+    }
+
+    public void GetArea(IRectangle t)
+    {
+        t.AreaofRectangle();
     }
 }
 
 
-public class Context
+public interface IRectangle
 {
-    IChoice _choice;
-    public void SetChoice(IChoice choice)
-    {
-        _choice = choice;
-    }
-
-    public void ShowChoice()
-    {
-        _choice.Mychoice();
-    }
-
+    public int AreaofRectangle();
 }
 
-public interface IChoice
+public interface ITriangle
 {
-
-    public void Mychoice();
-
-}
-
-public class Choice1 : IChoice
-{
-    public void Mychoice()
-    {
-        Console.WriteLine("I Want to have snacks");
-    }
+    public int AreaofTriangle();
 }
 
 
-
-public class Choice2 : IChoice
+public class Rectangle : IRectangle
 {
-    public void Mychoice()
+    public int length { get; set; }
+    public int breadth { get; set; }
+
+    public Rectangle(int length, int breadth)
     {
-        Console.WriteLine("I Want to have juice");
+        this.length = length;
+        this.breadth = breadth;
+    }
+    public int AreaofRectangle()
+    {
+        Console.WriteLine("Area of Rectangle is {0}", length * breadth);
+        return length * breadth;
+    }
+}
+
+public class Triangle : ITriangle
+{
+    public int breadth { get; set; }
+    public int height { get; set; }
+
+    public Triangle(int breadth, int height)
+    {
+        this.breadth =breadth;
+        this.height = height;
+    }
+    public int AreaofTriangle()
+    {
+        Console.WriteLine("Area of Triangle is {0}", (int)(0.5 * breadth * height));
+        return (int)(0.5 * breadth * height);
+    }
+}
+
+public class TriangleAdapter : IRectangle
+{
+
+    Triangle _t;
+    public TriangleAdapter(Triangle t)
+    {
+        _t = t;
+    }
+
+    public int AreaofRectangle()
+    {
+        return _t.AreaofTriangle();
     }
 }
