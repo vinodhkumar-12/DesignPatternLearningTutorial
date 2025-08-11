@@ -3,86 +3,40 @@
 
     public static void Main(string[] args)
     {
-        ObserverType1 observerType1 = new ObserverType1("Vinodh");
-        ObserverType2 observerType2 = new ObserverType2("kumar");
+        SingleTon singleTon = SingleTon.Instance;
 
-        Subject sub = new Subject();
-
-        sub.Register(observerType1);
-        sub.Register(observerType2);
-
-        sub.Flag = 1;
     }
+
 }
 
 
-
-public interface IObserver
+public class SingleTon
 {
-    void Update(int i);
-}
+    private static SingleTon _instance = null;
+    private static readonly object _instanceLock = new object();
 
-public class ObserverType1 : IObserver
-{
-    public string name;
-    public ObserverType1(string name)
+    private static int counter = 0;
+
+    public static SingleTon Instance
     {
-        this.name = name;
-    }
-
-    public void Update(int i)
-    {
-        Console.WriteLine("{0} of Observer Type 1 with value {1} is alerted", name, i);
-    }
-}
-
-
-public class ObserverType2 : IObserver
-{
-    public string name;
-    public ObserverType2(string name)
-    {
-        this.name = name;
-    }
-
-    public void Update(int i)
-    {
-        Console.WriteLine("{0} of Observer Type 2 with value {1} is notified", name, i);
-    }
-}
-
-
-public interface ISubject
-{
-    void Register(IObserver observer);
-    void UnRegister(IObserver observer);
-    void NotifyRegisteredUser();
-}
-public class Subject : ISubject
-{
-
-    public int flag;
-
-    public int Flag { set { flag = value; NotifyRegisteredUser(); } }
-
-
-    List<IObserver> observerlist = new List<IObserver>();
-
-    public void Register(IObserver observer)
-    {
-        observerlist.Add(observer);
-    }
-
-    public void UnRegister(IObserver observer)
-    {
-        observerlist.Remove(observer);
-    }
-
-    public void NotifyRegisteredUser()
-    {
-        foreach (IObserver observer in observerlist)
+        get
         {
-            observer.Update(flag);
+            if (_instance == null)
+            {
+                lock (_instanceLock)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = new SingleTon();
+                    }
+                }
+            }
+            return _instance;
         }
+    }
+    private SingleTon()
+    {
+        counter++;
+        Console.WriteLine("Instance Counter is {0}", counter++);
     }
 }
