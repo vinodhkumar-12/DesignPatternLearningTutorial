@@ -3,64 +3,94 @@
 
     public static void Main(string[] args)
     {
-        AnimalFactory dogFactory = new DogFactory();
 
-        IAnimal dog = dogFactory.CreatAnimal();
+        IAnimalFactory wildanimalFactory = new WildAnimalFactory();
 
-        dog.Speak();
+        IHerbivore wildDeer =   wildanimalFactory.createHerbivore();
 
-        AnimalFactory tigerFactory = new TigerFactory();
+        wildDeer.EatPlants();
 
-        IAnimal tiger = tigerFactory.CreatAnimal();
+        ICarnivore wildTiger = wildanimalFactory.createCarnivore();
 
-        tiger.Speak();
+        wildTiger.EatMeats();
     }
 
 
 }
 
 
-public interface IAnimal
+public interface IHerbivore
 {
-    void Speak();
+    void EatPlants();
 }
 
-public class Dog : IAnimal
+public interface ICarnivore
 {
+    void EatMeats();
+}
 
-    public void Speak()
+
+public class WildDeer : IHerbivore
+{
+    public void EatPlants()
     {
-        Console.WriteLine("Dog Barks");
+        Console.WriteLine("Wild Deer eats grass");
     }
 }
 
-public class Tiger : IAnimal
+public class DomesticCow : IHerbivore
 {
-    public void Speak()
+    public void EatPlants()
     {
-        Console.WriteLine("Tiger Roars");
-    }
-
-}
-
-public abstract class AnimalFactory
-{
-    public abstract IAnimal CreatAnimal();
-}
-
-public class DogFactory : AnimalFactory
-{
-    public override IAnimal CreatAnimal()
-    {
-        return new Dog();
+        Console.WriteLine("Domestic cow eats grass");
     }
 }
 
-
-public class TigerFactory : AnimalFactory
+public class WildTiger : ICarnivore
 {
-    public override IAnimal CreatAnimal()
+    public void EatMeats()
     {
-        return new Tiger();
+        Console.WriteLine("Wild Tiger eats meats");
+    }
+}
+
+public class DomesticDog : ICarnivore
+{
+    public void EatMeats()
+    {
+        Console.WriteLine("Domestic Dog eats meats");
+    }
+}
+
+
+public interface IAnimalFactory
+{
+    IHerbivore createHerbivore();
+    ICarnivore createCarnivore();
+}
+
+public class WildAnimalFactory : IAnimalFactory
+{
+    public IHerbivore createHerbivore()
+    {
+        return new WildDeer();
+    }
+
+    public ICarnivore createCarnivore()
+    {
+        return new WildTiger();
+    }
+}
+
+public class DomesticAnimalFactory : IAnimalFactory
+{
+    public IHerbivore createHerbivore()
+    {
+        return new DomesticCow();
+    }
+
+    public ICarnivore createCarnivore()
+    {
+        return new DomesticDog();
     }
 }
