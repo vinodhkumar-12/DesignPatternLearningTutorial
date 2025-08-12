@@ -1,86 +1,55 @@
 ﻿public class Program
 {
-    public static void Main()
+    public static void Main(string[] args)
     {
+        IAnimal animal = AnimalSimpleFactory.GetAnimal("");
 
-        Television tv = new Television();
-        Remote remote = new Remote();
-        Light light = new Light();  
-        HomeTheaterFacade homeTheaterFacade = new HomeTheaterFacade(tv, remote, light);
-
-        homeTheaterFacade.WatchMovie();
-        homeTheaterFacade.EndMovie();
-
-
+        if (animal == null)
+        { 
+            Console.WriteLine("No such animal not implemented"); 
+        }
+        else
+            animal.Speak();
     }
 }
 
 
-public class HomeTheaterFacade
+public class AnimalSimpleFactory
 {
-    Television _tv;
-    Remote _remote;
-    Light _light;
-    public HomeTheaterFacade(Television tv, Remote remote, Light light)
+    public static IAnimal GetAnimal(string AnimalName)
     {
-        this._tv = tv;
-        this._remote = remote;
-        this._light = light;
-    }
+        IAnimal animal = null;
 
-    public void WatchMovie()
-    {
-        _light.Bright();
-        _tv.On();
-        _remote.On();
-        _remote.SetVolume(50);
-    }
+        if (AnimalName == "Dog")
+        {
+            return new Dog();
+        }
+        else if (AnimalName == "Tiger")
+        {
+            return new Tiger();
+        }
 
-
-    public void EndMovie()
-    {
-        _tv.Off();
-        _light.Dim();
+        return animal;
     }
 }
 
-public class Television
+public interface IAnimal
 {
-    public void On()
-    {
-        Console.WriteLine("Television is ON");
-    }
-
-    public void Off()
-    {
-        Console.WriteLine("Television is OFF");
-    }
-
+    public void Speak();
 }
 
-
-public class Remote
+public class Dog : IAnimal
 {
-    public void On()
+    public void Speak()
     {
-        Console.WriteLine("Remote is On");
-    }
-
-    public void SetVolume(int i)
-    {
-        Console.WriteLine("Set the Volume with value {0}", i);
+        Console.WriteLine("Dog Barks");
     }
 }
 
-public class Light
+public class Tiger : IAnimal
 {
-    public void Dim()
+    public void Speak()
     {
-        Console.WriteLine("Make the light dim");
-    }
-
-    public void Bright()
-    {
-        Console.WriteLine("Make the light bright");
+        Console.WriteLine("Tiger Roars");
     }
 }
