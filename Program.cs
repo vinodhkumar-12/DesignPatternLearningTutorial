@@ -1,71 +1,86 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-public class Program
+﻿public class Program
 {
-    public static void Main(string[] args)
+    public static void Main()
     {
-        ElectronicGoods tv = new Television();
-        tv.State  = new OnState();
 
-        tv.MoveToCurrentState();
+        Television tv = new Television();
+        Remote remote = new Remote();
+        Light light = new Light();  
+        HomeTheaterFacade homeTheaterFacade = new HomeTheaterFacade(tv, remote, light);
 
-        tv.State = new OffState();
+        homeTheaterFacade.WatchMovie();
+        homeTheaterFacade.EndMovie();
 
-        tv.MoveToCurrentState();
+
     }
 }
 
 
-
-public interface IState
+public class HomeTheaterFacade
 {
-    public void MoveState();
-}
-
-
-public class OnState : IState
-{
-    public void MoveState()
+    Television _tv;
+    Remote _remote;
+    Light _light;
+    public HomeTheaterFacade(Television tv, Remote remote, Light light)
     {
-        Console.WriteLine("On State");
+        this._tv = tv;
+        this._remote = remote;
+        this._light = light;
+    }
+
+    public void WatchMovie()
+    {
+        _light.Bright();
+        _tv.On();
+        _remote.On();
+        _remote.SetVolume(50);
+    }
+
+
+    public void EndMovie()
+    {
+        _tv.Off();
+        _light.Dim();
     }
 }
 
-public class OffState : IState
+public class Television
 {
-    public void MoveState()
+    public void On()
     {
-        Console.WriteLine("Off State");
+        Console.WriteLine("Television is ON");
     }
+
+    public void Off()
+    {
+        Console.WriteLine("Television is OFF");
+    }
+
 }
 
 
-public abstract class ElectronicGoods
+public class Remote
 {
-    protected IState state;
-
-    public IState State
+    public void On()
     {
-        get { return state; }
-        set { state = value; }
+        Console.WriteLine("Remote is On");
     }
 
-    public abstract void MoveToCurrentState();
-}
-
-public class Television : ElectronicGoods
-{
-    public override void MoveToCurrentState()
+    public void SetVolume(int i)
     {
-        state.MoveState();
+        Console.WriteLine("Set the Volume with value {0}", i);
     }
 }
 
-
-public class AC : ElectronicGoods
+public class Light
 {
-    public override void MoveToCurrentState()
+    public void Dim()
     {
-        state.MoveState();
+        Console.WriteLine("Make the light dim");
+    }
+
+    public void Bright()
+    {
+        Console.WriteLine("Make the light bright");
     }
 }
