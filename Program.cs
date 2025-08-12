@@ -1,45 +1,33 @@
 ﻿public class Program
 {
+
     public static void Main(string[] args)
     {
-        IAnimal animal = AnimalSimpleFactory.GetAnimal("");
+        AnimalFactory dogFactory = new DogFactory();
 
-        if (animal == null)
-        { 
-            Console.WriteLine("No such animal not implemented"); 
-        }
-        else
-            animal.Speak();
+        IAnimal dog = dogFactory.CreatAnimal();
+
+        dog.Speak();
+
+        AnimalFactory tigerFactory = new TigerFactory();
+
+        IAnimal tiger = tigerFactory.CreatAnimal();
+
+        tiger.Speak();
     }
+
+
 }
 
-
-public class AnimalSimpleFactory
-{
-    public static IAnimal GetAnimal(string AnimalName)
-    {
-        IAnimal animal = null;
-
-        if (AnimalName == "Dog")
-        {
-            return new Dog();
-        }
-        else if (AnimalName == "Tiger")
-        {
-            return new Tiger();
-        }
-
-        return animal;
-    }
-}
 
 public interface IAnimal
 {
-    public void Speak();
+    void Speak();
 }
 
 public class Dog : IAnimal
 {
+
     public void Speak()
     {
         Console.WriteLine("Dog Barks");
@@ -51,5 +39,28 @@ public class Tiger : IAnimal
     public void Speak()
     {
         Console.WriteLine("Tiger Roars");
+    }
+
+}
+
+public abstract class AnimalFactory
+{
+    public abstract IAnimal CreatAnimal();
+}
+
+public class DogFactory : AnimalFactory
+{
+    public override IAnimal CreatAnimal()
+    {
+        return new Dog();
+    }
+}
+
+
+public class TigerFactory : AnimalFactory
+{
+    public override IAnimal CreatAnimal()
+    {
+        return new Tiger();
     }
 }
